@@ -1,9 +1,9 @@
-import { APIConfig } from './types';
+import { APIConfig } from '../../types';
 
 /**
- * Tushare API 接口配置
+ * K线数据接口配置
  */
-const API_CONFIG: APIConfig = {
+const KLINE_CONFIG: APIConfig = {
     // K线数据接口
     kline: {
         // 分钟级别数据
@@ -62,4 +62,4 @@ const API_CONFIG: APIConfig = {
     }
 };
 
-export default API_CONFIG;
+export default KLINE_CONFIG;
