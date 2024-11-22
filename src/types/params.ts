@@ -5,6 +5,8 @@ export interface BaseParams {
     end_date?: string;        // 结束日期（可选）
     trade_date?: string;      // 交易日期（可选，每周最后一个交易日期，YYYYMMDD格式）
     fields?: string;          // 返回字段（可选）
+    limit?: number;           // 单次返回数据长度（可选）
+    offset?: number;          // 请求数据的开始位置（可选）
 }
 
 export interface MinuteParams extends BaseParams {
