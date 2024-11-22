@@ -1,5 +1,5 @@
 import KLINE_CONFIG from './kline.config';
-import { API_NAME, DEFAULT_FIELDS } from './stock.config';
+import { API_NAME, DEFAULT_FIELDS } from './stk_factor.config';
 
 export {
     KLINE_CONFIG,
