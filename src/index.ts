@@ -6,7 +6,8 @@ import {
     StockBasicParams
 } from './types';
 import { KlineAPI } from './api/kline';
-import { StockAPI } from './api/stock_basic';
+import { StockBasicAPI } from './api/stock_basic';
+import { StkFactorAPI } from './api/stk_factor';
 
 /**
  * Tushare API 客户端类
@@ -14,7 +15,8 @@ import { StockAPI } from './api/stock_basic';
  */
 class TushareClient {
     private klineAPI: KlineAPI;
-    private stockAPI: StockAPI;
+    private stockBasicAPI: StockBasicAPI;
+    private stkFactorAPI: StkFactorAPI;
 
     /**
      * @param {string} token - Tushare API token
@@ -22,7 +24,8 @@ class TushareClient {
      */
     constructor({ token, baseURL = 'http://api.tushare.pro' }: ClientConfig) {
         this.klineAPI = new KlineAPI(token, baseURL, API_CONFIG);
-        this.stockAPI = new StockAPI(token, baseURL);
+        this.stockBasicAPI = new StockBasicAPI(token, baseURL);
+        this.stkFactorAPI = new StkFactorAPI(token, baseURL);
     }
 
     // K线数据相关方法
@@ -36,8 +39,25 @@ class TushareClient {
     async monthly(options: BaseParams) { return this.klineAPI.getMonthly(options); }
     async yearly(options: BaseParams) { return this.klineAPI.getYearly(options); }
 
-    // 股票数据相关方法
-    async stock_basic(options: StockBasicParams = {}) { return this.stockAPI.getStockBasic(options); }
+    // 股票基础数据相关方法
+    /**
+     * 获取股票基础信息
+     * @param {StockBasicParams} options - 查询参数
+     * @returns {Promise} 返回股票基础信息
+     */
+    async stock_basic(options: StockBasicParams = {}) {
+        return this.stockBasicAPI.getStockBasic(options);
+    }
+
+    // 股票因子数据相关方法
+    /**
+     * 获取股票因子数据
+     * @param {BaseParams} options - 查询参数
+     * @returns {Promise} 返回股票因子数据
+     */
+    async stk_factor(options: BaseParams = {}) {
+        return this.stkFactorAPI.getStkFactor(options);
+    }
 }
 
 export default TushareClient;

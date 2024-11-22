@@ -3,11 +3,13 @@ import { ValidationError } from '../utils/error';
 import { StockBasicParams, StockBasicData, APIResponse } from '../types';
 
 /**
- * 股票数据相关API
+ * 股票基础数据相关API
  */
-export class StockAPI extends BaseAPI {
+export class StockBasicAPI extends BaseAPI {
     /**
      * 获取股票基础信息
+     * @param {StockBasicParams} options - 查询参数
+     * @returns {Promise<APIResponse<StockBasicData>>} 返回股票基础信息的响应
      */
     async getStockBasic(options: StockBasicParams = {}): Promise<APIResponse<StockBasicData>> {
         const {
@@ -44,21 +46,5 @@ export class StockAPI extends BaseAPI {
         };
 
         return this.request<StockBasicData>('stock_basic', params);
-    }
-
-    /**
-     * 获取上市公司基本信息
-     * TODO: 实现更多股票相关的API方法
-     */
-    async getCompanyInfo() {
-        // 待实现
-    }
-
-    /**
-     * 获取上市公司管理层
-     * TODO: 实现更多股票相关的API方法
-     */
-    async getManagers() {
-        // 待实现
     }
 }
