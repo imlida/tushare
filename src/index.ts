@@ -1,12 +1,12 @@
 import API_CONFIG from './api/config';
-import { 
+import {
     ClientConfig,
     BaseParams,
     MinuteParams,
     StockBasicParams
 } from './types';
 import { KlineAPI } from './api/kline';
-import { StockAPI } from './api/stock';
+import { StockAPI } from './api/stock_basic';
 
 /**
  * Tushare API 客户端类
