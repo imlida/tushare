@@ -125,6 +125,83 @@ interface DailyKLineData {
 }
 ```
 
+### 股票因子数据
+
+#### getStkFactor(options)
+获取股票因子数据，包括复权因子、技术指标等数据。
+
+参数类型:
+```typescript
+interface BaseParams {
+    ts_code?: string;     // 股票代码
+    trade_date?: string;  // 交易日期 (YYYYMMDD)
+    start_date?: string;  // 开始日期 (YYYYMMDD)
+    end_date?: string;    // 结束日期 (YYYYMMDD)
+    limit?: number;       // 单次返回数据长度
+    offset?: number;      // 请求数据的开始位置
+    fields?: string;      // 需要的字段，可选
+}
+```
+
+返回数据类型:
+```typescript
+interface StkFactorData {
+    ts_code: string;       // 股票代码
+    trade_date: string;    // 交易日期
+    close: number;         // 收盘价
+    open: number;          // 开盘价
+    high: number;          // 最高价
+    low: number;           // 最低价
+    pre_close: number;     // 昨收价
+    change: number;        // 涨跌额
+    pct_change: number;    // 涨跌幅
+    vol: number;           // 成交量（手）
+    amount: number;        // 成交额（千元）
+    adj_factor: number;    // 复权因子
+    open_hfq: number;      // 开盘价后复权
+    open_qfq: number;      // 开盘价前复权
+    close_hfq: number;     // 收盘价后复权
+    close_qfq: number;     // 收盘价前复权
+    high_hfq: number;      // 最高价后复权
+    high_qfq: number;      // 最高价前复权
+    low_hfq: number;       // 最低价后复权
+    low_qfq: number;       // 最低价前复权
+    pre_close_hfq: number; // 昨收价后复权
+    pre_close_qfq: number; // 昨收价前复权
+    macd_dif: number;      // MACD DIF
+    macd_dea: number;      // MACD DEA
+    macd: number;          // MACD
+    kdj_k: number;         // KDJ_K
+    kdj_d: number;         // KDJ_D
+    kdj_j: number;         // KDJ_J
+    rsi_6: number;         // RSI_6
+    rsi_12: number;        // RSI_12
+    rsi_24: number;        // RSI_24
+    boll_upper: number;    // BOLL上轨
+    boll_mid: number;      // BOLL中轨
+    boll_lower: number;    // BOLL下轨
+    cci: number;           // CCI指标
+}
+```
+
+使用示例:
+```typescript
+// 获取股票因子数据
+async function getStkFactorData() {
+    try {
+        const data: APIResponse<StkFactorData> = await client.getStkFactor({
+            ts_code: '600519.SH',    // 股票代码
+            start_date: '20240101',  // 开始日期
+            end_date: '20240110',    // 结束日期
+            fields: 'ts_code,trade_date,close,adj_factor,macd,kdj_k,rsi_6,boll_upper'  // 指定需要的字段
+        });
+        console.log('股票因子数据:', data);
+    } catch (error) {
+        console.error('获取数据失败:', error);
+    }
+}
+```
+
 ## 开发
 
 ```bash

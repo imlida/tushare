@@ -1,6 +1,7 @@
 import { BaseAPI } from './base';
 import { ValidationError } from '../utils/error';
 import { BaseParams, APIResponse } from '../types';
+import { StkFactorData } from '../types/data';
 import { API_NAME, DEFAULT_FIELDS } from './config';
 
 /**
@@ -10,9 +11,9 @@ export class StkFactorAPI extends BaseAPI {
     /**
      * 获取股票因子数据
      * @param options 请求参数
-     * @returns Promise<APIResponse>
+     * @returns Promise<APIResponse<StkFactorData>>
      */
-    async getStkFactor(options: BaseParams = {}): Promise<APIResponse> {
+    async getStkFactor(options: BaseParams = {}): Promise<APIResponse<StkFactorData>> {
         const {
             ts_code,
             trade_date,
