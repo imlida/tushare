@@ -134,5 +134,5 @@ export class StockBasicAPI extends BaseAPI<StockBasicParams, StockBasicData[]> {
     }
 }
 
-// 导出单例实例
-export const stockBasicAPI = new StockBasicAPI();
+// 导出API类型
+export type StockBasicAPIType = (params: StockBasicParams) => Promise<StockBasicData[]>;
