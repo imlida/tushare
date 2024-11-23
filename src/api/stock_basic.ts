@@ -1,50 +1,111 @@
 import { BaseAPI } from './base';
-import { ValidationError } from '../utils/error';
-import { StockBasicParams, StockBasicData, APIResponse } from '../types';
+import { RequestParamSpec } from '../types/api';
 
 /**
- * 股票基础数据相关API
+ * 股票基础信息请求参数接口
  */
-export class StockBasicAPI extends BaseAPI {
+export interface StockBasicParams {
+    ts_code?: string;      // TS股票代码
+    name?: string;         // 名称
+    market?: string;       // 市场类别
+    list_status?: string;  // 上市状态
+    exchange?: string;     // 交易所
+    is_hs?: string;       // 是否沪深港通标的
+    fields?: string;       // 需要返回的字段列表
+}
+
+/**
+ * 股票基础信息响应数据接口
+ */
+export interface StockBasicData {
+    ts_code: string;      // TS代码
+    symbol: string;       // 股票代码
+    name: string;         // 股票名称
+    area: string;         // 地域
+    industry: string;     // 所属行业
+    fullname?: string;    // 股票全称
+    enname?: string;      // 英文全称
+    cnspell: string;      // 拼音缩写
+    market: string;       // 市场类型
+    exchange?: string;    // 交易所代码
+    curr_type?: string;   // 交易货币
+    list_status?: string; // 上市状态
+    list_date: string;    // 上市日期
+    delist_date?: string; // 退市日期
+    is_hs?: string;       // 是否沪深港通标的
+    act_name?: string;    // 实控人名称
+    act_ent_type?: string;// 实控人企业性质
+}
+
+/**
+ * 股票基础信息API实现
+ */
+export class StockBasicAPI extends BaseAPI<StockBasicParams, StockBasicData[]> {
+    readonly apiName = 'stock_basic';
+
+    readonly requestParams: RequestParamSpec[] = [
+        {
+            name: 'ts_code',
+            type: 'string',
+            required: false,
+            description: 'TS股票代码'
+        },
+        {
+            name: 'name',
+            type: 'string',
+            required: false,
+            description: '名称'
+        },
+        {
+            name: 'market',
+            type: 'string',
+            required: false,
+            description: '市场类别（主板/创业板/科创板/CDR/北交所）',
+            validator: (value: string) => ['主板', '创业板', '科创板', 'CDR', '北交所'].includes(value)
+        },
+        {
+            name: 'list_status',
+            type: 'string',
+            required: false,
+            default: 'L',
+            description: '上市状态：L上市 D退市 P暂停上市',
+            validator: (value: string) => ['L', 'D', 'P'].includes(value)
+        },
+        {
+            name: 'exchange',
+            type: 'string',
+            required: false,
+            description: '交易所：SSE上交所 SZSE深交所 BSE北交所',
+            validator: (value: string) => ['SSE', 'SZSE', 'BSE'].includes(value)
+        },
+        {
+            name: 'is_hs',
+            type: 'string',
+            required: false,
+            description: '是否沪深港通标的：N否 H沪股通 S深股通',
+            validator: (value: string) => ['N', 'H', 'S'].includes(value)
+        }
+    ];
+
+    readonly defaultFields: string[] = [
+        'ts_code',
+        'symbol',
+        'name',
+        'area',
+        'industry',
+        'list_date'
+    ];
+
     /**
-     * 获取股票基础信息
-     * @param {StockBasicParams} options - 查询参数
-     * @returns {Promise<APIResponse<StockBasicData>>} 返回股票基础信息的响应
+     * 获取股票基础信息数据
+     * @param options 请求参数
      */
-    async getStockBasic(options: StockBasicParams = {}): Promise<APIResponse<StockBasicData>> {
-        const {
-            ts_code,
-            name,
-            exchange,
-            market,
-            is_hs,
-            list_status,
-            limit,
-            offset,
-            ...rest
-        } = options;
+    async getData(options: StockBasicParams): Promise<StockBasicData[]> {
+        // 验证参数
+        this.validateParams(options);
 
-        // 参数验证
-        if (ts_code && !this.validateTsCode(ts_code)) {
-            throw new ValidationError('无效的股票代码格式');
-        }
-
-        if (exchange && !['SSE', 'SZSE', 'BSE'].includes(exchange)) {
-            throw new ValidationError('无效的交易所代码');
-        }
-
-        const params = {
-            ts_code,
-            name,
-            exchange,
-            market,
-            is_hs,
-            list_status,
-            limit,
-            offset,
-            ...rest
-        };
-
-        return this.request<StockBasicData>('stock_basic', params);
+        // TODO: 实现具体的数据获取逻辑
+        // 这里需要调用tushare的接口获取数据
+        throw new Error('Method not implemented.');
     }
 }

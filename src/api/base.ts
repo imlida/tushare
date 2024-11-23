@@ -1,75 +1,48 @@
-import { TushareAPIError, HTTPError } from '../utils/error';
-import { APIResponse } from '../types';
-
 /**
- * API基础类，处理通用的请求逻辑
+ * 基础API实现类
  */
-export class BaseAPI {
-    protected token: string;
-    protected baseURL: string;
+import { IDataAPI, RequestParamSpec } from '../types/api';
 
-    constructor(token: string, baseURL: string) {
-        this.token = token;
-        this.baseURL = baseURL;
-    }
+export abstract class BaseAPI<RequestParams, ResponseData> implements IDataAPI<RequestParams, ResponseData> {
+    /**
+     * API名称
+     */
+    abstract readonly apiName: string;
 
     /**
-     * 发送API请求的通用方法
-     * @protected
+     * 请求参数规范
      */
-    protected async request<T>(
-        apiName: string,
-        params: Record<string, any> = {},
-        fields: string = ''
-    ): Promise<APIResponse<T>> {
-        try {
-            const response = await fetch(this.baseURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    api_name: apiName,
-                    token: this.token,
-                    params,
-                    fields
-                })
-            });
+    abstract readonly requestParams: RequestParamSpec[];
 
-            if (!response.ok) {
-                throw new HTTPError(`HTTP error! status: ${response.status}`, response.status);
-            }
+    /**
+     * 默认返回字段列表
+     */
+    abstract readonly defaultFields: string[];
 
-            const data = await response.json();
+    /**
+     * 验证请求参数
+     * @param options 请求参数
+     */
+    validateParams(options: RequestParams): void {
+        // 遍历所有参数规范进行验证
+        this.requestParams.forEach(param => {
+            const value = (options as any)[param.name];
             
-            if (data.code !== 0) {
-                throw new TushareAPIError(data.msg, data.code);
+            // 检查必填参数
+            if (param.required && value === undefined) {
+                throw new Error(`参数 ${param.name} 是必填项`);
             }
 
-            return data;
-        } catch (error) {
-            if (error instanceof HTTPError || error instanceof TushareAPIError) {
-                throw error;
+            // 如果有值且有验证函数，则进行验证
+            if (value !== undefined && param.validator && !param.validator(value)) {
+                throw new Error(`参数 ${param.name} 验证失败`);
             }
-            throw new TushareAPIError(`API请求失败: ${(error as Error).message}`);
-        }
+        });
     }
 
     /**
-     * 验证日期格式是否正确 (YYYYMMDD)
-     * @protected
+     * 获取数据的抽象方法，需要子类实现
+     * @param options 请求参数
      */
-    protected validateDate(date: string | undefined): boolean {
-        if (!date) return true;
-        return /^\d{8}$/.test(date);
-    }
-
-    /**
-     * 验证股票代码格式是否正确
-     * @protected
-     */
-    protected validateTsCode(tsCode: string | undefined): boolean {
-        if (!tsCode) return true;
-        return /^\d{6}\.(SH|SZ|BJ)$/.test(tsCode);
-    }
+    abstract getData(options: RequestParams): Promise<ResponseData>;
 }
