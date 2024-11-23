@@ -17,7 +17,7 @@ export class HttpClient {
      * @param fields 可选的返回字段列表
      * @returns 
      */
-    async post<T>(apiName: string, params: Record<string, any>, fields?: string[]): Promise<T> {
+    async post<T>(apiName: string, params: Record<string, any>, fields?: string): Promise<T> {
         const response = await fetch(this.baseUrl, {
             method: 'POST',
             headers: {
@@ -27,7 +27,7 @@ export class HttpClient {
                 api_name: apiName,
                 token: this.token,
                 params,
-                fields: fields ? fields.join(',') : undefined,
+                fields: fields,
             }),
         });
 

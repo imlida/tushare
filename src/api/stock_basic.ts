@@ -12,7 +12,7 @@ export interface StockBasicParams {
     market?: string;       // 市场类别（主板/创业板/科创板/CDR/北交所）
     list_status?: string;  // 上市状态 L上市 D退市 P暂停上市
     is_hs?: string;       // 是否沪深港通标的，N否 H沪股通 S深股通
-    fields?: string[];     // 需要返回的字段列表
+    fields?: string;     // 需要返回的字段列表
 }
 
 /**
@@ -88,9 +88,9 @@ export class StockBasicAPI extends BaseAPI<StockBasicParams, StockBasicData[]> {
         },
         {
             name: 'fields',
-            type: 'array',
+            type: 'string',
             required: false,
-            description: '需要返回的字段列表',
+            description: '需要返回的字段列表'
         }
     ];
 
@@ -117,11 +117,14 @@ export class StockBasicAPI extends BaseAPI<StockBasicParams, StockBasicData[]> {
         // 提取fields参数
         const { fields, ...params } = options;
 
+        // 使用fields字符串或默认字段字符串
+        const fieldsStr = fields || this.defaultFields.join(',');
+
         // 发送请求
         const response = await getHttpClient().post<{
             fields: string[];
             items: any[][];
-        }>(this.apiName, params, fields || this.defaultFields);
+        }>(this.apiName, params, fieldsStr);
 
         // 将数组数据转换为对象数组
         return response.items.map(item => {
