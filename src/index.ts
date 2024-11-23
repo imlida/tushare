@@ -1,8 +1,12 @@
-export * from './types/api';
-export * from './api/base';
-export * from './api/stock_basic';
+import { initHttpClient } from './utils/http';
+export { stockBasicAPI } from './api/stock_basic';
+export type { StockBasicParams, StockBasicData } from './api/stock_basic';
 
-// 导出API实例
-import { StockBasicAPI } from './api/stock_basic';
-
-export const stockBasic = new StockBasicAPI();
+/**
+ * 初始化Tushare API客户端
+ * @param token API token
+ * @param baseUrl 可选的基础URL
+ */
+export function init(token: string, baseUrl?: string) {
+    initHttpClient(token, baseUrl);
+}
