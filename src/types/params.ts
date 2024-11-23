@@ -1,26 +1,51 @@
-// API请求参数类型定义
-export interface BaseParams {
-    ts_code?: string;         // 股票代码（可选）
-    start_date?: string;      // 开始日期（可选）
-    end_date?: string;        // 结束日期（可选）
-    trade_date?: string;      // 交易日期（可选，每周最后一个交易日期，YYYYMMDD格式）
-    fields?: string;          // 返回字段（可选）
-    limit?: number;           // 单次返回数据长度（可选）
-    offset?: number;          // 请求数据的开始位置（可选）
+/**
+ * 资产类别枚举
+ */
+export enum AssetType {
+    STOCK = 'E',        // 股票
+    INDEX = 'I',        // 沪深指数
+    CRYPTO = 'C',       // 数字货币
+    FUTURE = 'FT',      // 期货
+    FUND = 'FD',        // 基金
+    OPTION = 'O',       // 期权
+    CONVERTIBLE = 'CB'  // 可转债
 }
 
-export interface MinuteParams extends BaseParams {
-    freq: string;             // 频率（必选）
+/**
+ * 复权类型枚举
+ */
+export enum AdjustType {
+    NONE = 'None',      // 不复权
+    FORWARD = 'qfq',    // 前复权
+    BACKWARD = 'hfq'    // 后复权
 }
 
-// 股票列表请求参数
-export interface StockBasicParams {
-    ts_code?: string;         // TS代码
-    name?: string;            // 股票名称
-    exchange?: string;        // 交易所
-    market?: string;          // 市场类别
-    is_hs?: string;          // 是否沪深港通标的
-    list_status?: string;     // 上市状态
-    limit?: number;           // 单次返回数据长度
-    offset?: number;          // 请求数据的开始位置
+/**
+ * 数据频度枚举
+ */
+export enum FreqType {
+    MIN_1 = '1min',     // 1分钟
+    MIN_5 = '5min',     // 5分钟
+    MIN_15 = '15min',   // 15分钟
+    MIN_30 = '30min',   // 30分钟
+    MIN_60 = '60min',   // 60分钟
+    DAILY = 'D',        // 日线
+    WEEKLY = 'W',       // 周线
+    MONTHLY = 'M'       // 月线
+}
+
+/**
+ * Pro Bar接口参数
+ */
+export interface ProBarParams {
+    ts_code: string;           // 证券代码
+    start_date?: string;       // 开始日期
+    end_date?: string;         // 结束日期
+    asset?: AssetType;         // 资产类别
+    adj?: AdjustType;         // 复权类型
+    freq?: FreqType;          // 数据频度
+    ma?: number[];            // 均线周期
+    factors?: string[];       // 股票因子
+    adjfactor?: boolean;      // 是否返回复权因子
+    fields?: string[];        // 自定义字段列表
 }
