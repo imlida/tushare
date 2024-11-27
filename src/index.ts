@@ -3,11 +3,13 @@ import { StockBasicAPI, StockBasicParams, StockBasicAPIType } from './api/stock_
 import { DailyAPI, DailyAPIType } from './api/daily';
 import { ProBarAPI, ProBarAPIType, ProBarRequestParams } from './api/pro_bar';
 import { StkFactorAPI, StkFactorRequestParams } from './api/stk_factor';
+import { StkFactorProAPI, StkFactorProParams, StkFactorProAPIType } from './api/stk_factor_pro';
 
 export type { StockBasicParams, StockBasicData } from './api/stock_basic';
 export type { DailyRequestParams, DailyResponseData } from './api/daily';
 export type { ProBarRequestParams, ProBarResponseData } from './api/pro_bar';
 export type { StkFactorRequestParams, StkFactorResponseData } from './api/stk_factor';
+export type { StkFactorProParams, StkFactorProData } from './api/stk_factor_pro';
 
 /**
  * Tushare API客户端
@@ -18,6 +20,7 @@ export class Client {
     private _dailyAPI: DailyAPI;
     private _proBarAPI: ProBarAPI;
     private _stkFactorAPI: StkFactorAPI;
+    private _stkFactorProAPI: StkFactorProAPI;
 
     /**
      * 股票基本信息API
@@ -39,16 +42,23 @@ export class Client {
      */
     readonly stk_factor: (params: StkFactorRequestParams) => Promise<any[]>;
 
+    /**
+     * 股票技术面因子数据接口(专业版)
+     */
+    readonly stk_factor_pro: StkFactorProAPIType;
+
     constructor(token: string, baseUrl?: string) {
         this.httpClient = new HttpClient(baseUrl, token);
         this._stockBasicAPI = new StockBasicAPI();
         this._dailyAPI = new DailyAPI();
         this._proBarAPI = new ProBarAPI();
         this._stkFactorAPI = new StkFactorAPI();
+        this._stkFactorProAPI = new StkFactorProAPI();
         this.stock_basic = (params: StockBasicParams) => this._stockBasicAPI.getData(params);
         this.daily = (params) => this._dailyAPI.getData(params);
         this.pro_bar = (params) => this._proBarAPI.getData(params);
         this.stk_factor = (params) => this._stkFactorAPI.getData(params);
+        this.stk_factor_pro = (params) => this._stkFactorProAPI.getData(params);
     }
 }
 
